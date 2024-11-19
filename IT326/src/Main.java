@@ -1,6 +1,7 @@
 public class Main{
     public static void main(String[] args) {
         // Main application logic here
+        System.out.println("Hello World");
     }
     public void logIn() {
             // Implementation code here
