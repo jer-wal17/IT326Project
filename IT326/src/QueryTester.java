@@ -4,13 +4,17 @@ import java.sql.*;
 
 public class QueryTester {
 
-    String queryString;
+    private String queryString;
 
-    public boolean retrieveAccount(String userToRet, Connection conn) throws SQLException {
+
+    public boolean retrieveAccount(String userToRet) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+        ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
+        Connection connection = connSerializer.connect();
 
         queryString = "select * from Accounts join AccountPreferences on Accounts.AccountID=AccountPreferences.AccountID";
 
-        Statement stmt = conn.createStatement();
+        Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(queryString);
 
         while( rs.next() ) {
@@ -22,6 +26,8 @@ public class QueryTester {
                 System.out.println("username = " + username + ", favDecade = " + favDecade);
             }
         }
+
+        connSerializer.disconnect(connection);
 
         return true;
     }
