@@ -251,7 +251,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
 
     // checks to see if the database already has an account with the specified account uid. returns true if yes, false otherwise
     @Override
-    public boolean isAlreadyStored(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+    public boolean isAlreadyStored(int uid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 
         boolean isStored = false;
 
@@ -264,15 +264,15 @@ public class MySQLQuerySerializer extends QuerySerializer {
 
         // query the database and get the result set back
         PreparedStatement pstmt = connection.prepareStatement(queryString);
-        pstmt.setInt(1, account.getUID());
+        pstmt.setInt(1, uid);
         ResultSet rs = pstmt.executeQuery();
 
         // use the result set object to create the Account object that is to be returned
         while( rs.next() ) {
-            int uid = rs.getInt("AccountID");
+            int dbUID = rs.getInt("AccountID");
 
             // if the stored username is not the same as the argument username
-            if (uid == account.getUID()) {
+            if (dbUID == uid) {
                 return true;
             }
         }
