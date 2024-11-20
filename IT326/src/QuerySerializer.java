@@ -42,6 +42,7 @@ public abstract class QuerySerializer{
     // delete the group information from the database
     //abstract public boolean delete(Group group);
 
-    abstract public boolean isAlreadyStored(int uid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
+    // check if the uid has already been stored in the database
+    abstract public boolean hasAlreadyStored(int uid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
 
 }

@@ -52,9 +52,11 @@ public class MySQLQuerySerializer extends QuerySerializer {
     /*------------------------------------------------------------------*
     * Method: retrieve(Account)                                         *
     *                                                                   *
-    * Description: retrieve an account from the database and return the *
-    *              Account object. if the account cannot be found in    *
-    *              the database, then null is returned. uses uid as key *
+    * Description: retrieve an account from the database based on the   *
+    *              account uid and return the Account object. if the    *
+    *              uid cannot be found in the database, then null is    *
+    *              returned. uses uid as key to find account in the     *
+    *              database.                                            *
     *                                                                   *
     *-------------------------------------------------------------------*/
     @Override
@@ -88,7 +90,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
                 returnAccount = new Account(username, phoneNumber, uid, password);
             }
             else {
-                System.out.println("cannot retrieve account because specified uid does not exist in database");
+                System.out.println("cannot retrieve account because specified uid does not exist in database. returning null");
             }
         }
 
@@ -192,7 +194,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
         Connection connection = connSerializer.connect();
 
         // if the account already exists, call the update() method instead
-        if (isAlreadyStored(account)) {
+        if (hasAlreadyStored(account.getUID())) {
             return update(account);
         }
 
@@ -229,7 +231,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
         Connection connection = connSerializer.connect();
 
         // if the account does not exist in the database, then return false since we did not delete an account
-        if (!isAlreadyStored(account)) {
+        if (!hasAlreadyStored(account.getUID())) {
             System.out.println("account does not exist in the database and thus could not be deleted");
             return false;
         }
@@ -248,10 +250,16 @@ public class MySQLQuerySerializer extends QuerySerializer {
     }
 
 
-
-    // checks to see if the database already has an account with the specified account uid. returns true if yes, false otherwise
+    /*------------------------------------------------------------------*
+    * Method: hasAlreadyStored(int uid)                                 *
+    *                                                                   *
+    * Description: checks to see if the database already has an account *
+    *              with the specified account uid. returns true if yes, *
+    *              false otherwise                                      *
+    *                                                                   *
+    *-------------------------------------------------------------------*/
     @Override
-    public boolean isAlreadyStored(int uid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+    public boolean hasAlreadyStored(int uid) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 
         boolean isStored = false;
 
@@ -267,13 +275,13 @@ public class MySQLQuerySerializer extends QuerySerializer {
         pstmt.setInt(1, uid);
         ResultSet rs = pstmt.executeQuery();
 
-        // use the result set object to create the Account object that is to be returned
+        // use the result set object to get the uid
         while( rs.next() ) {
             int dbUID = rs.getInt("AccountID");
 
-            // if the stored username is not the same as the argument username
+            // if the uid stored in the database equals the argument passed uid
             if (dbUID == uid) {
-                return true;
+                isStored = true;
             }
         }
 
