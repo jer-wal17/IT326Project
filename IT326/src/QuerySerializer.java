@@ -42,4 +42,6 @@ public abstract class QuerySerializer{
     // delete the group information from the database
     //abstract public boolean delete(Group group);
 
+    abstract public boolean isAlreadyStored(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
+
 }
