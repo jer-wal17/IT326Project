@@ -54,7 +54,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
     *                                                                   *
     * Description: retrieve an account from the database and return the *
     *              Account object. if the account cannot be found in    *
-    *              the database, then null is returned                  *
+    *              the database, then null is returned. uses uid as key *
     *                                                                   *
     *-------------------------------------------------------------------*/
     @Override
@@ -78,13 +78,17 @@ public class MySQLQuerySerializer extends QuerySerializer {
 
         // use the result set object to create the Account object that is to be returned
         while( rs.next() ) {
-            int id = rs.getInt("AccountID");
+            int uid = rs.getInt("AccountID");
             String username = rs.getString("Username");
             String phoneNumber = rs.getString("PhoneNumber");
             String password = rs.getString("Password");
 
-            if (username.equals(account.username)) {
-                returnAccount = new Account(username, phoneNumber, id, password);
+            // if the stored username is not the same as the argument username
+            if (uid == account.getUID()) {
+                returnAccount = new Account(username, phoneNumber, uid, password);
+            }
+            else {
+                System.out.println("cannot retrieve account because specified uid does not exist in database");
             }
         }
 
@@ -183,12 +187,12 @@ public class MySQLQuerySerializer extends QuerySerializer {
     private boolean saveAccount(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 
 
-        // creae connection to the database
+        // create connection to the database
         ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
         Connection connection = connSerializer.connect();
 
         // if the account already exists, call the update() method instead
-        if (retrieve(account) != null) {
+        if (isAlreadyStored(account)) {
             return update(account);
         }
 
@@ -225,7 +229,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
         Connection connection = connSerializer.connect();
 
         // if the account does not exist in the database, then return false since we did not delete an account
-        if (retrieve(account) == null) {
+        if (!isAlreadyStored(account)) {
             System.out.println("account does not exist in the database and thus could not be deleted");
             return false;
         }
@@ -240,6 +244,45 @@ public class MySQLQuerySerializer extends QuerySerializer {
         connSerializer.disconnect(connection);
 
         return true;
+
+    }
+
+
+
+    // checks to see if the database already has an account with the specified account uid. returns true if yes, false otherwise
+    @Override
+    public boolean isAlreadyStored(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+
+        boolean isStored = false;
+
+        // create connection to database
+        ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
+        Connection connection = connSerializer.connect();
+
+        // create string that will be used to query the database
+        queryString = "select * from Accounts WHERE AccountID=?";
+
+        // query the database and get the result set back
+        PreparedStatement pstmt = connection.prepareStatement(queryString);
+        pstmt.setInt(1, account.getUID());
+        ResultSet rs = pstmt.executeQuery();
+
+        // use the result set object to create the Account object that is to be returned
+        while( rs.next() ) {
+            int uid = rs.getInt("AccountID");
+
+            // if the stored username is not the same as the argument username
+            if (uid == account.getUID()) {
+                return true;
+            }
+        }
+
+        // disconnect from the database
+        connSerializer.disconnect(connection);
+
+        // send the returnAccount back to the caller even if it is null
+        return isStored;
+
 
     }
 
