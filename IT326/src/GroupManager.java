@@ -1,14 +1,10 @@
 
-import java.util.Collection;
-
 
     public class GroupManager {
     
-        public Collection<Group> groups;
+       
     
-        public Group retrieveGroup(int groupID) {
-            return new Group();
-        }
+        
     
         public boolean createNewAccountGroup(Account account, String movie, int maxSize) {
             return true;
