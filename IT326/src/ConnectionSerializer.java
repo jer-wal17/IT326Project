@@ -5,7 +5,7 @@
  *                                                                   *
  *-------------------------------------------------------------------*/
 
-import java.sql.SQLException;
+import java.sql.*;
 
 public abstract class ConnectionSerializer {
 
@@ -13,16 +13,16 @@ public abstract class ConnectionSerializer {
      * Fields                                                         *
      *----------------------------------------------------------------*/
     // string used to connect to the database
-    String connectionString;
+    private String connectionString;
 
 
     /*----------------------------------------------------------------*
      * Methods                                                        *
      *----------------------------------------------------------------*/
     // connects the program to the database
-    abstract boolean connect() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
+    abstract Connection connect() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
 
     // disconnects the program from the database
-    abstract boolean disconnect() throws SQLException;
+    abstract boolean disconnect(Connection connection) throws SQLException;
 
 }
