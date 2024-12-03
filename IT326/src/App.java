@@ -1,14 +1,9 @@
-import com.google.gson.*;
-
 public class App
 {
     public static void main(String[] args) throws Exception
     {
-
-        System.out.println("Hello, World!");
-
-        
-
-
+        String movieName = "Tron: Legacy";
+        Movie myMovie = new Movie(movieName);
+        System.out.println(myMovie);
     }
 }
