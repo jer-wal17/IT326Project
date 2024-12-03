@@ -1,9 +1,18 @@
 //Acount Class
+import java.util.ArrayList;
+
 public class Account{
     String username;
     String phoneNumber;
     int uid;
     String password;
+    ArrayList<Group> group;
+    public Account(){
+
+    }
+    public Account(int uid){
+        this.uid=uid;
+    }
     public Account(String username, String phoneNumber, int uid, String password){
         this.username=username;
         this.phoneNumber=phoneNumber;
