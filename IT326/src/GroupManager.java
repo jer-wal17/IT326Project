@@ -22,6 +22,7 @@ public class GroupManager {
         System.out.println("Group with this ID already exists.");
         return false;
     }
+    
 
     // Add a member to the current group
     public boolean addMember(Account member) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
