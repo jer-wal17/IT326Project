@@ -6,7 +6,7 @@ public class Account{
     String phoneNumber;
     int uid;
     String password;
-    ArrayList<Group> group;
+    ArrayList<Group> group = new ArrayList<Group>();
     public Account(){
 
     }

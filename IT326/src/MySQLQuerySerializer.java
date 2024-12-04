@@ -6,6 +6,7 @@
  *-------------------------------------------------------------------*/
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class MySQLQuerySerializer extends QuerySerializer {
 
@@ -92,6 +93,33 @@ public class MySQLQuerySerializer extends QuerySerializer {
             else {
                 System.out.println("cannot retrieve account because specified uid does not exist in database. returning null");
             }
+        }
+
+        // if the returnAccount was able to be created from the database query then get the groups the account is a part of
+        if (returnAccount != null) {
+
+            // create string that will be used to query the database for the groups that the account is a part of
+            queryString = "SELECT * FROM it326_group_project.GroupMembers JOIN it326_group_project.Groups ON it326_group_project.GroupMembers.GroupID=it326_group_project.Groups.GroupID where AccountID=?";
+
+            // query the database and get the result set back
+            pstmt = connection.prepareStatement(queryString);
+            pstmt.setInt(1, returnAccount.getUID());
+            rs = pstmt.executeQuery();
+
+            // use the result set object to create the Group objects that is to be added to the Account object
+            while( rs.next() ) {
+                int groupID = rs.getInt("GroupID");
+                String movieTitle = rs.getString("MovieTitle");
+                Movie movie = new Movie(movieTitle);
+                String meetingAddress = rs.getString("MeetingAddress");
+                Date dbDate = rs.getDate("MeetingDate");
+                LocalDate localDate = LocalDate.of(dbDate.getYear(), dbDate.getMonth(),dbDate.getDay());
+
+                Group newGroup = new Group(groupID, movie, meetingAddress, localDate, returnAccount, 0);
+                returnAccount.group.add(newGroup);
+
+            }
+
         }
 
         // disconnect from the database
