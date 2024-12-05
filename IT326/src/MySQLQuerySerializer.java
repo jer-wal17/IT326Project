@@ -6,6 +6,7 @@
  *-------------------------------------------------------------------*/
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class MySQLQuerySerializer extends QuerySerializer {
 
@@ -94,6 +95,33 @@ public class MySQLQuerySerializer extends QuerySerializer {
             }
         }
 
+        // if the returnAccount was able to be created from the database query then get the groups the account is a part of
+        if (returnAccount != null) {
+
+            // create string that will be used to query the database for the groups that the account is a part of
+            queryString = "SELECT * FROM it326_group_project.GroupMembers JOIN it326_group_project.Groups ON it326_group_project.GroupMembers.GroupID=it326_group_project.Groups.GroupID where AccountID=?";
+
+            // query the database and get the result set back
+            pstmt = connection.prepareStatement(queryString);
+            pstmt.setInt(1, returnAccount.getUID());
+            rs = pstmt.executeQuery();
+
+            // use the result set object to create the Group objects that is to be added to the Account object
+            while( rs.next() ) {
+                int groupID = rs.getInt("GroupID");
+                String movieTitle = rs.getString("MovieTitle");
+                Movie movie = new Movie(movieTitle);
+                String meetingAddress = rs.getString("MeetingAddress");
+                Date dbDate = rs.getDate("MeetingDate");
+                LocalDate localDate = LocalDate.of(dbDate.getYear(), dbDate.getMonth(),dbDate.getDay());
+
+                Group newGroup = new Group(groupID, movie, meetingAddress, localDate, returnAccount, 0);
+                returnAccount.group.add(newGroup);
+
+            }
+
+        }
+
         // disconnect from the database
         connSerializer.disconnect(connection);
 
@@ -110,7 +138,66 @@ public class MySQLQuerySerializer extends QuerySerializer {
     *              group object                                         *
     *                                                                   *
     *-------------------------------------------------------------------*/
-    //public Group retrieve(Group group) {}
+    @Override
+    public Group retrieve(Group group) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+        // declare Group object that will be returned
+        Group returnGroup = null;
+
+
+        // create connection to database
+        ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
+        Connection connection = connSerializer.connect();
+
+        // create string that will be used to query the database
+        queryString = "SELECT * FROM it326_group_project.Groups WHERE GroupID=?";
+
+        // query the database and get the result set back
+        PreparedStatement pstmt = connection.prepareStatement(queryString);
+        pstmt.setInt(1, group.getGroupID());
+        ResultSet rs = pstmt.executeQuery();
+
+        // use the result set object to create the Account object that is to be returned
+        while( rs.next() ) {
+            int groupID = rs.getInt("GroupID");
+            String movieTitle = rs.getString("MovieTitle");
+            Movie movie = new Movie(movieTitle);
+            String meetingAddress = rs.getString("MeetingAddress");
+            Date dbDate = rs.getDate("MeetingDate");
+            LocalDate localDate = LocalDate.of(dbDate.getYear(), dbDate.getMonth(),dbDate.getDay());
+            Account owner = new Account();
+
+            // if the stored username is not the same as the argument username
+            if (group.getGroupID() == groupID) {
+                returnGroup = new Group(groupID, movie, meetingAddress, localDate, owner, 0);
+            }
+            else {
+                System.out.println("cannot retrieve account because specified uid does not exist in database. returning null");
+            }
+        }
+
+        if (returnGroup != null) {
+
+            // create string that will be used to query the database for the groups that the account is a part of
+            queryString = "SELECT * FROM it326_group_project.GroupMembers inner JOIN it326_group_project.Groups ON it326_group_project.GroupMembers.GroupID=it326_group_project.Groups.GroupID WHERE it326_group_project.Groups.GroupID=?";
+
+            // query the database and get the result set back
+            pstmt = connection.prepareStatement(queryString);
+            pstmt.setInt(1, returnGroup.getGroupID());
+            rs = pstmt.executeQuery();
+
+            // use the result set object to create the Group objects that is to be added to the Account object
+            while( rs.next() ) {
+                int accountID = rs.getInt("AccountID");
+                returnGroup.getMembers().add(retrieve(new Account(accountID)));
+
+            }
+
+        }
+
+        // send the returnGroup back to the caller even if it is still null
+        return returnGroup;
+    }
 
 
     /*------------------------------------------------------------------*

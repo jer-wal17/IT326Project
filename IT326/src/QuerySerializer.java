@@ -28,7 +28,7 @@ public abstract class QuerySerializer{
     abstract public Account retrieve(Account account) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 
     // retrieve a group from the database and return the Group object
-    //abstract public Group retrieve(Group group);
+    abstract public Group retrieve(Group group) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 
     // update the account in the database using the account passed into the method
     abstract public boolean update(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
