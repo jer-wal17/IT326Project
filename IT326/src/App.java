@@ -1,4 +1,4 @@
-
+import java.time.LocalDate;
 
 public class App
 {
@@ -17,13 +17,21 @@ public class App
         }
 
         // check for retrieve group
-        System.out.println("checking for retrieve group\n");
+        System.out.println("checking for retrieve group with id = 1\n");
         Group myGroup = new Group(1, new Movie("pie"), "", null, new Account(), 1);
         myGroup = db.retrieve(myGroup);
         System.out.println("\n\t" + myGroup.getMovie().getMovieName() + "\n\tmeeting address : " + myGroup.getMeetingAddress() + "\n\tmeeting date: " + myGroup.getMeetingDate().toString());
         for (Account curAccount : myGroup.getMembers()) {
             System.out.println("\n\t" + curAccount.getUsername() + "\n\t" + "uid: " + curAccount.getUID() + "\n\tpassword: " + curAccount.getPassword() + "\n\tphone number: " + curAccount.getPhoneNumber() + "\n" );
         }
+
+
+        // check for save group
+        LocalDate newDate = LocalDate.of(2025, 01, 12);
+        Movie newMovie = new Movie("harry potter");
+        System.out.println("newMovie title: " + newMovie.getMovieName());
+        Group newGroup = new Group(3, newMovie, "34 third st", newDate, myAccount, 0);
+        db.save(newGroup);
 
 
     }
