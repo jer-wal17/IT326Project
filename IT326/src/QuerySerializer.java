@@ -13,7 +13,7 @@ public abstract class QuerySerializer{
      * Fields                                                         *
      *----------------------------------------------------------------*/
     // the string that represents the query to the database
-    String queryString;
+    protected String queryString;
 
     /*----------------------------------------------------------------*
      * Methods                                                        *
@@ -22,7 +22,7 @@ public abstract class QuerySerializer{
     abstract public boolean save(Account account) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 
     // create a group and save in the database
-    abstract public boolean save(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
+    abstract public int save(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
 
     // retrieve an account from the database and return the Account object
     abstract public Account retrieve(Account account) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException;
@@ -34,7 +34,7 @@ public abstract class QuerySerializer{
     abstract public boolean update(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;
 
     // update the group in the database using the group passed into the method
-    abstract public boolean update(Group group) throws InstantiationException, IllegalAccessException, SQLException, ClassNotFoundException;
+    abstract public int update(Group group) throws InstantiationException, IllegalAccessException, SQLException, ClassNotFoundException;
 
     // delete the account information from the database
     abstract public boolean delete(Account account) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException;

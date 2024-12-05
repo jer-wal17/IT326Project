@@ -48,7 +48,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
     *                                                                   *
     *-------------------------------------------------------------------*/
     @Override
-    public boolean save(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+    public int save(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
         // call the helper method
         return saveGroup(group);
     }
@@ -168,7 +168,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
             Movie movie = new Movie(movieTitle);
             String meetingAddress = rs.getString("MeetingAddress");
             Date dbDate = rs.getDate("MeetingDate");
-            LocalDate localDate = LocalDate.of(dbDate.getYear(), dbDate.getMonth(),dbDate.getDay());
+            LocalDate localDate = dbDate.toLocalDate();
             Account owner = new Account();
 
             // if the stored username is not the same as the argument username
@@ -230,7 +230,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
     *                                                                   *
     *-------------------------------------------------------------------*/
     @Override
-    public boolean update(Group group) throws InstantiationException, IllegalAccessException, SQLException, ClassNotFoundException {
+    public int update(Group group) throws InstantiationException, IllegalAccessException, SQLException, ClassNotFoundException {
         delete(group);
         return saveGroup(group);
     }
@@ -374,7 +374,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
         }
 
         // create query string and delete the account from the database
-        queryString = "DELETE FROM Groups WHERE GroupID=?";
+        queryString = "DELETE FROM it326_group_project.Groups WHERE GroupID=?";
         PreparedStatement pstmt = connection.prepareStatement(queryString);
         pstmt.setInt(1, group.getGroupID());
         pstmt.executeUpdate();
@@ -486,31 +486,35 @@ public class MySQLQuerySerializer extends QuerySerializer {
     *              exists, then the group is updated instead            *
     *                                                                   *
     *-------------------------------------------------------------------*/
-    private boolean saveGroup(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+    private int saveGroup(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 
         // create connection to the database
         ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
         Connection connection = connSerializer.connect();
 
-        // if the account already exists, call the update() method instead
+        // if the group already exists, call the update(group) method instead
         if (hasAlreadyStoredGroup(group.getGroupID())) {
             return update(group);
         }
 
-        // create the sql query and insert the account into the database
-        queryString = "INSERT INTO Groups (GroupID, MovieTitle, MeetingAddress, MeetingDate) VALUES (?, ?, ?, ?)";
-        PreparedStatement pstmt = connection.prepareStatement(queryString);
-        pstmt.setInt(1, group.getGroupID());
-        pstmt.setString(2, group.getMovie().getMovieName());
-        pstmt.setString(3, group.getMeetingAddress());
-        String meetingDate = group.getMeetingDate().toString();
-        pstmt.setString(4, meetingDate);
+        // create the sql query and insert the group into the database
+        queryString = "INSERT INTO it326_group_project.Groups(MovieTitle, MeetingAddress, MeetingDate) VALUES(?,?,?)";
+        PreparedStatement pstmt = connection.prepareStatement(queryString,Statement.RETURN_GENERATED_KEYS);
+        //pstmt.setInt(1, group.getGroupID());
+        pstmt.setString(1, group.getMovie().getMovieName());
+        pstmt.setString(2, group.getMeetingAddress());
+        pstmt.setDate(3, Date.valueOf(group.getMeetingDate()));
         pstmt.executeUpdate();
+        ResultSet rs = pstmt.getGeneratedKeys();
+        int row = 0;
+        if(rs.next()){
+            row = rs.getInt(1);
+        }
 
         // disconnect from the database
         connSerializer.disconnect(connection);
 
-        return true;
+        return row;
 
     }
 
