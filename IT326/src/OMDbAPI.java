@@ -49,12 +49,12 @@ public class OMDbAPI extends API
      * @param title
      */
     @Override
-    public void retrieveTop3Movies(String title)
+    public boolean retrieveTop3Movies(String title)
     {
         JsonObject searchObj = retrieveSearchObject(title);
         if (searchObj == null)
         {
-            return;
+            return false;
         }
 
         // Convert the searchObj to a JsonArray
@@ -85,6 +85,8 @@ public class OMDbAPI extends API
             System.out.println("Movie #" + (i + 1) + ": " + movieName);
         }
         System.out.println();
+
+        return true;
     }
 
     /**

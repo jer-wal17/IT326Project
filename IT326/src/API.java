@@ -4,5 +4,5 @@ public abstract class API
 
     public abstract Movie search(String title);
 
-    public abstract void retrieveTop3Movies(String title);
+    public abstract boolean retrieveTop3Movies(String title);
 }

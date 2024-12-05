@@ -14,7 +14,8 @@ public class Main {
             System.out.println("3. Join a Group");
             System.out.println("4. Edit Account");
             System.out.println("5. Leave a Group");
-            System.out.println("6. Exit");
+            System.out.println("6. Retrieve Movies");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -56,6 +57,13 @@ public class Main {
                     }
                 }
                 case 6: {
+                    System.out.print("Enter movie title to search: ");
+                    String title = scanner.nextLine();
+                    if (!controller.retrieveMovies(title)) {
+                        System.out.println("Error with printing movies. Please see error above.");
+                    }
+                }
+                case 7: {
                     System.out.println("Exiting the system. Goodbye!");
                    flag = false;
                 }

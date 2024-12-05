@@ -61,4 +61,8 @@ public class Controller{
     public boolean leaveGroup(){
         return groupH.validateLeaveGroupRequest();
     }
+    public boolean retrieveMovies(String title){
+        OMDbAPI myAPI = (OMDbAPI) APIFactory.getAPI(APIFactory.APIType.OMDB);
+        return myAPI.retrieveTop3Movies(title);
+    }
 }
