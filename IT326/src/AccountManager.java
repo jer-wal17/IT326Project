@@ -1,15 +1,15 @@
-
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class AccountManager{
     Account curAccount;
     Account loginAccount;
-    Account blankAccount;
     private final QuerySerializer dataBase = new MySQLQuerySerializer();
     private final Scanner keyboard = new Scanner(System.in);
 
-    public boolean editAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+    public AccountManager(){
+    }
+    public Account editAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.curAccount!=null){
             Account changeAccount = this.curAccount;
             int selection=6;
@@ -31,10 +31,10 @@ public class AccountManager{
                         System.out.println("Changes Saved");
                         this.curAccount=changeAccount;
                         dataBase.update(this.curAccount);
-                        return true;
+                        return this.curAccount;
                     case 5:
                         System.out.println("Changes Not Saved");
-                        return true;
+                        return this.curAccount;
                     default:
                         System.out.println("Provide an entry within 1-5");
                 }
@@ -43,7 +43,7 @@ public class AccountManager{
             }
         }
         System.out.println("Log in First");
-        return false;
+        return null;
     }
 
     public boolean deleteAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
@@ -70,7 +70,7 @@ public class AccountManager{
         }
         else{
             System.out.println("User ID in use: create a new one.");
-            return blankAccount;
+            return null;
         }
     }
     public Account logIn(int uid, String password) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
@@ -87,7 +87,7 @@ public class AccountManager{
         else{
             System.out.println("Username or Password not found.");
         }
-        return blankAccount;
+        return null;
     }
     public boolean logOut() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.curAccount!=null && dataBase.hasAlreadyStored(this.curAccount.uid)){
