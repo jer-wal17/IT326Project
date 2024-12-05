@@ -47,7 +47,11 @@ public class MySQLQuerySerializer extends QuerySerializer {
     * Description: save the group in the database                       *
     *                                                                   *
     *-------------------------------------------------------------------*/
-    //public boolean save(Group group) {}
+    @Override
+    public int save(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+        // call the helper method
+        return saveGroup(group);
+    }
 
 
     /*------------------------------------------------------------------*
@@ -164,7 +168,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
             Movie movie = new Movie(movieTitle);
             String meetingAddress = rs.getString("MeetingAddress");
             Date dbDate = rs.getDate("MeetingDate");
-            LocalDate localDate = LocalDate.of(dbDate.getYear(), dbDate.getMonth(),dbDate.getDay());
+            LocalDate localDate = dbDate.toLocalDate();
             Account owner = new Account();
 
             // if the stored username is not the same as the argument username
@@ -225,7 +229,11 @@ public class MySQLQuerySerializer extends QuerySerializer {
     *              passed into the method                               *
     *                                                                   *
     *-------------------------------------------------------------------*/
-    //public boolean update(Group group) {}
+    @Override
+    public int update(Group group) throws InstantiationException, IllegalAccessException, SQLException, ClassNotFoundException {
+        delete(group);
+        return saveGroup(group);
+    }
 
 
     /*------------------------------------------------------------------*
@@ -252,7 +260,13 @@ public class MySQLQuerySerializer extends QuerySerializer {
     * Description: delete the group information from the database       *
     *                                                                   *
     *-------------------------------------------------------------------*/
-    //public boolean delete(Group group) {}
+    @Override
+    public boolean delete(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+
+        deleteGroup(group);
+        return true;
+
+    }
 
 
 
@@ -337,6 +351,44 @@ public class MySQLQuerySerializer extends QuerySerializer {
     }
 
 
+
+    /*------------------------------------------------------------------*
+    * Method: deleteGroup(Group)                                        *
+    *                                                                   *
+    * Description: helper method for the delete(Group) and update(Group)*
+    *              methods. uses the group's id to identify it in       *
+    *              the database                                         *
+    *                                                                   *
+    *-------------------------------------------------------------------*/
+    private boolean deleteGroup(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+
+
+        // connect to the database
+        ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
+        Connection connection = connSerializer.connect();
+
+        // if the account does not exist in the database, then return false since we did not delete an account
+        if (!hasAlreadyStoredGroup(group.getGroupID())) {
+            System.out.println("group does not exist in the database and thus could not be deleted");
+            return false;
+        }
+
+        // create query string and delete the account from the database
+        queryString = "DELETE FROM it326_group_project.Groups WHERE GroupID=?";
+        PreparedStatement pstmt = connection.prepareStatement(queryString);
+        pstmt.setInt(1, group.getGroupID());
+        pstmt.executeUpdate();
+
+        // disconnect from the database
+        connSerializer.disconnect(connection);
+
+        return true;
+
+    }
+
+
+
+
     /*------------------------------------------------------------------*
     * Method: hasAlreadyStored(int uid)                                 *
     *                                                                   *
@@ -378,6 +430,91 @@ public class MySQLQuerySerializer extends QuerySerializer {
         // send the returnAccount back to the caller even if it is null
         return isStored;
 
+
+    }
+
+
+
+    /*------------------------------------------------------------------*
+    * Method: hasAlreadyStoredGroup                                     *
+    *                                                                   *
+    * Description: checks to see if the database already has a Group    *
+    *              with the specified group id. returns true if yes,    *
+    *              false otherwise                                      *
+    *                                                                   *
+    *-------------------------------------------------------------------*/
+    public boolean hasAlreadyStoredGroup(int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        boolean isStored = false;
+
+        // create connection to database
+        ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
+        Connection connection = connSerializer.connect();
+
+        // create string that will be used to query the database
+        queryString = "SELECT * FROM it326_group_project.Groups WHERE GroupID=?";
+
+        // query the database and get the result set back
+        PreparedStatement pstmt = connection.prepareStatement(queryString);
+        pstmt.setInt(1, groupID);
+        ResultSet rs = pstmt.executeQuery();
+
+        // use the result set object to get the uid
+        while( rs.next() ) {
+            int dbGid = rs.getInt("GroupID");
+
+            // if the uid stored in the database equals the argument passed uid
+            if (dbGid == groupID) {
+                isStored = true;
+            }
+        }
+
+        // disconnect from the database
+        connSerializer.disconnect(connection);
+
+        // send the returnAccount back to the caller even if it is null
+        return isStored;
+    }
+
+
+
+    /*------------------------------------------------------------------*
+    * Method: saveGroup(Group)                                          *
+    *                                                                   *
+    * Description: helper method for the save(Group) and update(Group)  *
+    *              methods. Uses the group's id to identify it in       *
+    *              the database. if the group to be saved already       *
+    *              exists, then the group is updated instead            *
+    *                                                                   *
+    *-------------------------------------------------------------------*/
+    private int saveGroup(Group group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+
+        // create connection to the database
+        ConnectionSerializer connSerializer = new MySQLConnectionSerializer();
+        Connection connection = connSerializer.connect();
+
+        // if the group already exists, call the update(group) method instead
+        if (hasAlreadyStoredGroup(group.getGroupID())) {
+            return update(group);
+        }
+
+        // create the sql query and insert the group into the database
+        queryString = "INSERT INTO it326_group_project.Groups(MovieTitle, MeetingAddress, MeetingDate) VALUES(?,?,?)";
+        PreparedStatement pstmt = connection.prepareStatement(queryString,Statement.RETURN_GENERATED_KEYS);
+        //pstmt.setInt(1, group.getGroupID());
+        pstmt.setString(1, group.getMovie().getMovieName());
+        pstmt.setString(2, group.getMeetingAddress());
+        pstmt.setDate(3, Date.valueOf(group.getMeetingDate()));
+        pstmt.executeUpdate();
+        ResultSet rs = pstmt.getGeneratedKeys();
+        int row = 0;
+        if(rs.next()){
+            row = rs.getInt(1);
+        }
+
+        // disconnect from the database
+        connSerializer.disconnect(connection);
+
+        return row;
 
     }
 
