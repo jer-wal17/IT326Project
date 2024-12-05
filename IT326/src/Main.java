@@ -62,6 +62,7 @@ public class Main {
                     if (!controller.retrieveMovies(title)) {
                         System.out.println("Error with printing movies. Please see error above.");
                     }
+                    break;
                 }
                 case 7: {
                     System.out.println("Exiting the system. Goodbye!");
