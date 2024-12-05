@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -7,9 +8,12 @@ public class GroupManager {
     private Collection<Group> groups = new ArrayList<>();
     private Group currentGroup;
 
-    // Retrieve a group by its ID
-    public Group retrieveGroup(int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return dataBase.hasAlreadyStored(groupID) ? dataBase.retrieve(new Group(groupID)) : null;
+    public Group retrieveGroup(int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+        if (dataBase.hasAlreadyStored(groupID)) {
+            Account account = new Account("defaultUsername", "defaultPhoneNumber", 0, "defaultPassword"); 
+            return dataBase.retrieve(new Group(groupID, null, "defaultAddress", LocalDate.now(), account, 1));
+        }
+        return null; // Return null if the group is not stored
     }
 
     // Create a new group
