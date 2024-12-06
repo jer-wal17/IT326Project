@@ -10,7 +10,8 @@ public class Main {
         while (flag) {
             System.out.println("\nMain Menu:");
             System.out.println("1. Log In");
-            System.out.println("2. Log Out");
+            System.out.println("2. Create account");
+            System.out.println("2. Exit");
             System.out.println("3. Join a Group");
             System.out.println("4. Edit Account");
             System.out.println("5. Leave a Group");
