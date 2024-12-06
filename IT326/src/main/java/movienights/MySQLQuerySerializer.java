@@ -1,3 +1,4 @@
+package main.java.movienights;
 /*-------------------------------------------------------------------*
  * Class Name: MySQLQuerySerializer                                  *
  *                                                                   *
@@ -10,15 +11,7 @@ import java.time.LocalDate;
 
 public class MySQLQuerySerializer extends QuerySerializer {
 
-    /*----------------------------------------------------------------*
-     * Fields                                                         *
-     *----------------------------------------------------------------*/
-    // the string that represents the query to the database
-    String queryString;
-
-
-
-
+    
     /*----------------------------------------------------------------*
      * Public Methods                                                 *
      *----------------------------------------------------------------*/

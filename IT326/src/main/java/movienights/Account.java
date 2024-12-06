@@ -1,5 +1,8 @@
+package main.java.movienights;
+
 //Acount Class
 import java.util.ArrayList;
+import java.util.List;
 
 public class Account{
     String username;
@@ -7,7 +10,7 @@ public class Account{
     int uid;
     String password;
     int perferedDecade;
-    ArrayList<Group> group;
+    List<Group> group = new ArrayList<>();
     public Account(){
 
     }

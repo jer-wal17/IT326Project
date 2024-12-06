@@ -1,3 +1,5 @@
+package main.java.movienights;
+
 public class GroupHandler {
 
     

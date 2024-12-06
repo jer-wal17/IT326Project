@@ -1,3 +1,5 @@
+package main.java.movienights;
+
 public class Movie {
     private String movieName;
     private int movieYear;

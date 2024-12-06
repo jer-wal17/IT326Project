@@ -1,3 +1,5 @@
+package main.java.movienights;
+
 import java.util.Scanner;
 
 public class Main {

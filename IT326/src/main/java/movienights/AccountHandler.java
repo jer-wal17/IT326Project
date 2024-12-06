@@ -1,3 +1,5 @@
+package main.java.movienights;
+
 import java.sql.SQLException;
 
 public class AccountHandler{
