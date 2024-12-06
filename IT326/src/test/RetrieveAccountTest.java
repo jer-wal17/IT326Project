@@ -2,6 +2,7 @@
 package test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -23,12 +24,17 @@ public class RetrieveAccountTest {
     }
     
 
-    /*@Test
-    void retrieveAccountThatDoesNotExist() {
+    @Test
+    public void retrieveAccountThatDoesNotExist() {
         QuerySerializer db = new MySQLQuerySerializer();
         Account acc = new Account(55);
-        assertNull(db.retrieve(acc));
-    }*/
+        try {
+            acc = db.retrieve(acc);
+         } catch (Exception e) {
+             fail();
+         }
+        assertNull(acc);
+    }
     
     
 }

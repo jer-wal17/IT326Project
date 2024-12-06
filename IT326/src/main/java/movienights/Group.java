@@ -11,7 +11,7 @@ public class Group {
     private LocalDate meetingDate;
     private Account owner; // Owner of the group
     private int maxSize; // Maximum size of the group
-    private List<Account> members; // Members of the group
+    private List<Account> members = new ArrayList<>(); // Members of the group
   
   public Group(int groupID, Movie movie, String meetingAddress, LocalDate meetingDate, Account owner, int maxSize) {
         this.groupID = groupID;
