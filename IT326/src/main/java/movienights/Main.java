@@ -1,3 +1,5 @@
+package main.java.movienights;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
