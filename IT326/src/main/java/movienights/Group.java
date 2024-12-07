@@ -23,6 +23,20 @@ public class Group {
         this.members = new ArrayList<>();
         this.members.add(owner); // Add the owner as the first member
     }
+    // Method to add a member
+    public boolean addMember(Account member) {
+        if (members == null) {
+            members = new ArrayList<>(); // Initialize the list if null
+        }
+        if (members.contains(member)) {
+            return false; // Member already exists
+        }
+        if (maxSize > 0 && members.size() >= maxSize) {
+            return false; // Group is at maximum capacity
+        }
+        members.add(member);
+        return true; // Member added successfully
+    }
 // Getters and setters
 public int getGroupID() {
     return groupID;

@@ -31,26 +31,28 @@ public class GroupManager {
     
 
     // Add a member to the current group
-    public boolean addMember(Account member) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-        if (currentGroup != null && !currentGroup.getMembers().contains(member)) {
-            if (currentGroup.addMember(member)) {
-                dataBase.update(currentGroup);
-                System.out.println("Member added successfully.");
-                return true;
-            } else {
-                System.out.println("Group is at maximum capacity.");
-            }
-        } else {
-            System.out.println("Group not selected or member already exists.");
-        }
+public boolean addMember(Account member) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    if (currentGroup == null) {
+        System.out.println("Group not selected.");
         return false;
     }
 
-    // List all groups
-    public Collection<Group> listGroup() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-        groups = dataBase.retrieve(); 
-        return groups;
+    // Check if the member is already in the group
+    if (currentGroup.getMembers().contains(member)) {
+        System.out.println("Member already exists in the group.");
+        return false;
     }
+
+    // Add the member and update the database
+    if (currentGroup.addMember(member)) {
+        dataBase.update(currentGroup);
+        System.out.println("Member added successfully.");
+        return true;
+    } else {
+        System.out.println("Group is at maximum capacity.");
+        return false;
+    }
+}
 
     // Delete a group by its ID
     public boolean deleteGroup(int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {

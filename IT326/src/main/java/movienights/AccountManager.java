@@ -1,86 +1,34 @@
 package main.java.movienights;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class AccountManager{
     Account curAccount;
     Account loginAccount;
     private final QuerySerializer dataBase = new MySQLQuerySerializer();
-    private final Scanner keyboard = new Scanner(System.in);
 
     public AccountManager(){
     }
-    public Account editAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-        if(this.curAccount!=null){
-            Account changeAccount = this.curAccount;
-            int selection=6;
-            while(selection!=5||selection!=4){
-                switch(selection){
-                    case 1:
-                        System.out.print("New Username: ");
-                        changeAccount.username=keyboard.nextLine();
-                        break;
-                    case 2:
-                        System.out.print("New Password: ");
-                        changeAccount.password=keyboard.nextLine();
-                        break;
-                    case 3:
-                        System.out.print("New Phone Number: ");
-                        changeAccount.phoneNumber=keyboard.nextLine();
-                        break;
-                    case 4:
-                        System.out.println("Changes Saved");
-                        this.curAccount=changeAccount;
-                        dataBase.update(this.curAccount);
-                        return this.curAccount;
-                    case 5:
-                        System.out.println("Changes Not Saved");
-                        return this.curAccount;
-                    default:
-                        System.out.println("Provide an entry within 1-5");
-                }
-            System.out.println("1. username\n2. password\n3. Phone Number\4. Save Changes\n 5. Cancel Changes");
-            selection=keyboard.nextInt();
-            }
-        }
-        System.out.println("Log in First");
-        return null;
-    }
 
-    public boolean deleteAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-        String confirm;
-        String doubleConfirm;
-        if(this.curAccount!=null){
-            System.out.print("Would you like to go back? (y:n): ");
-            confirm=keyboard.nextLine();
-            if(confirm.toLowerCase().equals("n")){
-                System.out.print("Delete Account? (y:n): ");
-                doubleConfirm=keyboard.nextLine();
-                if(confirm.toLowerCase().equals("n") && doubleConfirm.toLowerCase().equals("y")){
-                    dataBase.delete(curAccount);
-                }
-            }
-        }
-        return false;
-    }
     public Account createAccount(String username, String password, String phoneNumber, int uid) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-        curAccount = new Account(username, phoneNumber, uid, password);
         if(dataBase.hasAlreadyStored(uid)){
+            this.curAccount = new Account(username, phoneNumber, uid, password);
             dataBase.save(curAccount);
-            return curAccount;
+            return this.curAccount;
         }
         else{
-            System.out.println("User ID in use: create a new one.");
+            System.out.println("User ID has an Account");
             return null;
         }
     }
     public Account logIn(int uid, String password) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(dataBase.hasAlreadyStored(uid)){
             this.loginAccount=dataBase.retrieve(new Account(uid));
-            if(loginAccount.password.equals(password)){
+            if(loginAccount.getPassword().equals(password)){
+                System.out.println("Successfully Logged In");
                 this.curAccount = this.loginAccount;
-                return curAccount;
+                listGroups();
+                return this.curAccount;
             }
             else{
                 System.out.println("Password doesn't match");
@@ -92,10 +40,62 @@ public class AccountManager{
         return null;
     }
     public boolean logOut() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-        if(this.curAccount!=null && dataBase.hasAlreadyStored(this.curAccount.uid)){
+        if(this.curAccount!=null && dataBase.hasAlreadyStored(this.curAccount.getUID())){
             dataBase.update(this.curAccount);
             return true;
         }
         return false;
+    }
+    public boolean editAccount(Account changeTo) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+        if(this.curAccount!=null){
+            if(dataBase.hasAlreadyStored(changeTo.getUID())){
+                this.curAccount = changeTo;
+                dataBase.update(this.curAccount);
+                return true;
+            }
+            else{
+                System.out.println("Cannot Save. UID was changed");
+            }
+        }
+        System.out.println("Log in First");
+        return false;
+    }
+    public boolean changePrefrences(Account changeTo) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+        if(this.curAccount!=null){
+            if(dataBase.hasAlreadyStored(changeTo.getUID())){
+                this.curAccount = changeTo;
+                dataBase.update(this.curAccount);
+                return true;
+            }
+            else{
+                System.out.println("Cannot Save. UID was changed");
+            }
+        }
+        System.out.println("Log in First");
+        return false;
+    }
+    public boolean deleteAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+        if(this.curAccount!=null){
+            if(dataBase.hasAlreadyStored(this.curAccount.getUID())){
+                dataBase.delete(this.curAccount);
+                return true;
+            }
+            else{
+                System.out.println("Cannot Delete Account. UID Changed");
+            }
+        }
+        System.out.println("Log in First");
+        return false;
+    }
+    private void listGroups(){
+        if(this.curAccount.group.isEmpty()){
+            System.out.println("Here are your current groups");
+            for(int i=0; i<this.curAccount.group.size(); i++){
+                System.out.println("Group ID: "+this.curAccount.group.get(i).getGroupID()+"\nMovie: "+this.curAccount.group.get(i).getMovie()+"\nMeeting Date: "+this.curAccount.group.get(i).getMeetingDate()+"\nMeeting Address: "+this.curAccount.group.get(i).getMeetingAddress()+"\n");
+            }
+        }
+        else{
+            System.out.println("You have not joined any groups.");
+        }
     }
 }
