@@ -132,8 +132,8 @@ public class Controller{
     public boolean createGroup(Group group){
         return groupH.validateCreateGroupRequest(group);
     }
-    public boolean joinGroup(){
-        return groupH.validateFindGroupRequest(this.currentAccount);
+    public boolean joinGroup(int groupID){
+        return groupH.validateFindGroupRequest(this.currentAccount, groupID);
     }
     public boolean leaveGroup(){
         return groupH.validateLeaveGroupRequest(this.currentAccount);
