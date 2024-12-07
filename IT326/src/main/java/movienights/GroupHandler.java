@@ -29,35 +29,39 @@ public class GroupHandler {
             }
         }
     }
-    
-    // Validate if the current account can join a group
-    public boolean validateFindGroupRequest(Account currentAccount) {
+    public boolean validateFindGroupRequest(Account currentAccount) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         // Check if there are available groups to join
         if (availableGroups.isEmpty()) {
             System.out.println("No available groups to join.");
             return false;
         }
-
-        // Example check: ensure that the current account is not already a member of the group
+    
+        // Iterate through available groups
         for (Group group : availableGroups) {
+            // Check if the group has space and the current account isn't already a member
             if (group.getMembers().size() < group.getMaxSize() && !group.getMembers().contains(currentAccount)) {
-                // If group has space and the current account isn't already a member, allow joining
-                return true;
+                // Use GroupManager to add the current account as a member of this group
+                 // Assuming GroupManager takes a group as a parameter
+                if (groupManager.addMember(currentAccount)) {
+                    System.out.println("Successfully joined the group: " + group.getGroupID());
+                    return true;
+                } else {
+                    System.out.println("Failed to join the group: " + group.getGroupID());
+                    return false;
+                }
             }
         }
-
-        // No available group to join
-        System.out.println("No groups with available spots.");
+        // If no suitable group was found
+        System.out.println("No suitable group found for joining.");
         return false;
     }
-
     // Validate the request to leave a group
-    public boolean validateLeaveGroupRequest() {
+    public boolean validateLeaveGroupRequest(Account currentAccount) {
         return true;  // always valid to leave a group
     }
 
     // Validate the group creation request
-    public boolean validateCreateGroup(Group group) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public boolean validateCreateGroupRequest(Group group) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         // Delegate the group creation task to GroupManager and return the result
         boolean isCreated = groupManager.createGroup(group);
         if (isCreated) {
