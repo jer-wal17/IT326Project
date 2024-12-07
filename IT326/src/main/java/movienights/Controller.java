@@ -25,21 +25,25 @@ public class Controller{
         if(this.currentAccount!=null){
             Account changeAccount = this.currentAccount;
             int selection;
+            String changeInfo;
             System.out.println("--Edit Account Inforamtion--\n1) Change Username\n2) Change Password\n3) Change Phone Number\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
             selection=keyboard.nextInt();
             while(selection!=4||selection!=5){
                 switch(selection){
                     case 1: //Change Username
                         System.out.println("New Username: ");
-                        changeAccount.username = keyboard.nextLine();
+                        changeInfo = keyboard.nextLine();
+                        changeAccount.setUsername(changeInfo);
                         break;
                     case 2: //Change Password
                         System.out.print("New Password: ");
-                        changeAccount.password=keyboard.nextLine();
+                        changeInfo = keyboard.nextLine();
+                        changeAccount.setPassword(changeInfo);
                         break;
                     case 3: //Change Phone Number
                         System.out.print("New Phone Number: ");
-                        changeAccount.phoneNumber=keyboard.nextLine();
+                        changeInfo = keyboard.nextLine();
+                        changeAccount.setPhoneNumber(changeInfo);
                         break;
                     case 4: //Save & Exit
                         if(accountH.validateEditAccountRequest(changeAccount)){
@@ -63,6 +67,7 @@ public class Controller{
     }
     public boolean changePrefrences() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.currentAccount!=null){
+            int favDecade;
             Account changeAccount = this.currentAccount;
             int selection;
             System.out.println("--Edit Prefrences--\n1) Add Prefered Decade\n2) Change Perfered Decade\n3) Change Remove Perfered Decade\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
@@ -71,15 +76,22 @@ public class Controller{
                 switch(selection){
                     case 1: //Add Prefered Decade
                         System.out.println("Add Favorite Decade");
-                        changeAccount.perferedDecade = keyboard.nextInt();
+                        favDecade= keyboard.nextInt();
+                        changeAccount.setPerferedDecade(favDecade);
                         break;
                     case 2: //Change Perfered Decade
-                        System.out.print("New Favorite Decade: ");
-                        changeAccount.perferedDecade=keyboard.nextInt();
+                        if(currentAccount.getDecade()==404){
+                            System.out.println("Set a Favorite Decade Before Changing it");
+                        }
+                        else{
+                            System.out.print("New Favorite Decade: ");
+                            favDecade= keyboard.nextInt();
+                            changeAccount.setPerferedDecade(favDecade);
+                        }
                         break;
                     case 3: //Change Delete Perfered Decade
                         System.out.println("Perfered Decade Removed");
-                        changeAccount.perferedDecade=404;
+                        changeAccount.setPerferedDecade(404);
                         break;
                     case 4: //Save & Exit
                         if(accountH.validateEditAccountRequest(changeAccount)){

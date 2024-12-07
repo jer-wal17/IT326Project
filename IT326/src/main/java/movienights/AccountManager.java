@@ -24,7 +24,7 @@ public class AccountManager{
     public Account logIn(int uid, String password) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(dataBase.hasAlreadyStored(uid)){
             this.loginAccount=dataBase.retrieve(new Account(uid));
-            if(loginAccount.password.equals(password)){
+            if(loginAccount.getPassword().equals(password)){
                 System.out.println("Successfully Logged In");
                 this.curAccount = this.loginAccount;
                 listGroups();
@@ -40,7 +40,7 @@ public class AccountManager{
         return null;
     }
     public boolean logOut() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-        if(this.curAccount!=null && dataBase.hasAlreadyStored(this.curAccount.uid)){
+        if(this.curAccount!=null && dataBase.hasAlreadyStored(this.curAccount.getUID())){
             dataBase.update(this.curAccount);
             return true;
         }
@@ -48,7 +48,7 @@ public class AccountManager{
     }
     public boolean editAccount(Account changeTo) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.curAccount!=null){
-            if(dataBase.hasAlreadyStored(changeTo.uid)){
+            if(dataBase.hasAlreadyStored(changeTo.getUID())){
                 this.curAccount = changeTo;
                 dataBase.update(this.curAccount);
                 return true;
@@ -62,7 +62,7 @@ public class AccountManager{
     }
     public boolean changePrefrences(Account changeTo) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.curAccount!=null){
-            if(dataBase.hasAlreadyStored(changeTo.uid)){
+            if(dataBase.hasAlreadyStored(changeTo.getUID())){
                 this.curAccount = changeTo;
                 dataBase.update(this.curAccount);
                 return true;
@@ -76,7 +76,7 @@ public class AccountManager{
     }
     public boolean deleteAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.curAccount!=null){
-            if(dataBase.hasAlreadyStored(this.curAccount.uid)){
+            if(dataBase.hasAlreadyStored(this.curAccount.getUID())){
                 dataBase.delete(this.curAccount);
                 return true;
             }
