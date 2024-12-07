@@ -1,3 +1,5 @@
+package main.java.movienights;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -158,7 +160,7 @@ public class Main {
                 System.out.print("Enter the Group ID to join: ");
                 int groupId = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
-                if (controller.joinGroup(groupId)) {
+                if (controller.joinGroup()) {
                     System.out.println("Joined the group successfully.");
                 } else {
                     System.out.println("Failed to join the group.");
@@ -207,7 +209,7 @@ private static void editInformation(Scanner scanner, Controller controller) {
     switch (choice) {
         case 1: { // Edit Account Information
             System.out.println("Editing account information...");
-            if (controller.editAccountInformation()) {
+            if (controller.editAccount()) {
                 System.out.println("Account information updated successfully.");
             } else {
                 System.out.println("Failed to update account information.");
@@ -216,7 +218,7 @@ private static void editInformation(Scanner scanner, Controller controller) {
         }
         case 2: { // Edit Preferences
             System.out.println("Editing preferences...");
-            if (controller.editPreferences()) {
+            if (controller.changePrefrences()) {
                 System.out.println("Preferences updated successfully.");
             } else {
                 System.out.println("Failed to update preferences.");
