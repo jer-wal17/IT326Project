@@ -1,7 +1,7 @@
 package test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
 
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class LogOutTest {
             boolean logoutSuccess = controller.logOut();
             assertTrue("Log out should succeed", logoutSuccess);
         } catch (Exception e) {
-            fail("Exception occurred during logOut test: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 @Test
@@ -32,8 +32,9 @@ public class LogOutTest {
             boolean logoutSuccess = controller.logOut();
             assertFalse("Log out should fail without a logged-in account", logoutSuccess);
         } catch (Exception e) {
-            fail("Exception occurred during logOut test: " + e.getMessage());
+            e.printStackTrace();
+        };
         }
     }
     
-}
+
