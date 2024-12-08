@@ -1,3 +1,9 @@
+/**
+ * Author: Zachary Kunzer
+ * Class: IT326
+ * Date: 12/08/2024
+ * Controller.java - recieves incoming data from main and redirects the requests to either the AccountHandler or GroupHandler.
+ */
 package main.java.movienights;
 
 import java.sql.SQLException;
@@ -10,17 +16,47 @@ public class Controller{
 
     public Controller(){
     }
+
+/**
+ * Creates a new account after validation.
+ * 
+ * @param username the username for the account
+ * @param password the password for the account
+ * @param phoneNumber the phone number for the account
+ * @param UID the unique ID for the account
+ * @return true if the account is successfully created, false otherwise
+ */
     public boolean createAccount(String username, String password, String phoneNumber, int UID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         this.currentAccount=accountH.validteCreateAccount(username, password, phoneNumber, UID);
         return this.currentAccount!=null;
     }
+
+/**
+ * Logs in to an existing account after validation.
+ * 
+ * @param uid the unique ID of the account
+ * @param password the password for the account
+ * @return true if login is successful, false otherwise
+ */
     public boolean logIn(int uid, String password) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         this.currentAccount=accountH.validateLoginRequest(uid, password);
         return this.currentAccount!=null;
     }
+
+/**
+ * Logs out the currently logged-in account.
+ * 
+ * @return true if logout is successful, false otherwise
+ */
     public boolean logOut() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         return accountH.validateLogoutRequest();
     }
+
+/**
+ * Allows the user to edit the current account's information interactively.
+ * 
+ * @return true if the changes are saved successfully, false otherwise
+ */
     public boolean editAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.currentAccount!=null){
             Account changeAccount = this.currentAccount;
@@ -65,6 +101,12 @@ public class Controller{
         }
         return false;
     }
+
+/**
+ * Allows the user to change preferences of the current account interactively.
+ * 
+ * @return true if the changes are saved successfully, false otherwise
+ */
     public boolean changePrefrences() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.currentAccount!=null){
             int favDecade;
@@ -113,6 +155,12 @@ public class Controller{
         }
         return false;
     }
+
+/**
+ * Deletes the currently logged-in account after confirmation.
+ * 
+ * @return true if the account is successfully deleted, false otherwise
+ */
     public boolean deleteAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         String confirm;
         String doubleConfirm;
@@ -129,9 +177,23 @@ public class Controller{
         }
         return false;
     }
+
+/**
+ * Creates a new group.
+ * 
+ * @param group the Group object containing the group details
+ * @return true if the group is successfully created, false otherwise
+ */
     public boolean createGroup(Group group){
         return groupH.validateCreateGroupRequest(group);
     }
+
+/**
+ * Joins a group by its group ID.
+ * 
+ * @param groupID the ID of the group to join
+ * @return true if the group is successfully joined, false otherwise
+ */
     public boolean joinGroup(int groupID){
         Group joinGroup = groupH.validateFindGroupRequest(this.currentAccount, groupID);
         if(joinGroup!=null){
@@ -145,6 +207,13 @@ public class Controller{
         }
         return false;
     }
+
+/**
+ * Leaves a group by its group ID.
+ * 
+ * @param groupID the ID of the group to leave
+ * @return true if the group is successfully left, false otherwise
+ */
     public boolean leaveGroup(int groupID){
         if(groupH.validateLeaveGroupRequest(this.currentAccount, groupID)){
             Account changeTo = this.currentAccount;
@@ -156,6 +225,13 @@ public class Controller{
         }
         return false;
     }
+
+/**
+ * Retrieves the top three movies based on a given title using an external API.
+ * 
+ * @param title the title of the movie to search for
+ * @return true if the movies are successfully retrieved, false otherwise
+ */
     public boolean retrieveMovies(String title){
         OMDbAPI myAPI = (OMDbAPI) APIFactory.getAPI(APIFactory.APIType.OMDB);
         return myAPI.retrieveTop3Movies(title);

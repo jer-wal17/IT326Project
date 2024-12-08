@@ -1,3 +1,9 @@
+/**
+ * Author: Zachary Kunzer
+ * Class: IT326
+ * Date: 12/08/2024
+ * Account.java - Serves the purpose of our Account data type. Stores various information about a user.
+ */
 package main.java.movienights;
 
 //Acount Class
@@ -11,12 +17,14 @@ public class Account{
     private String password;
     private int perferedDecade;
     public List<Group> joinedGroup = new ArrayList<>();
-    public Account(){
 
+    public Account(){
     }
+    //constructor based on UID so that we can build a partial Account object to look up if that UID exists in the database.
     public Account(int uid){
         this.uid=uid;
     }
+    //full constructor for when the user creates an account
     public Account(String username, String phoneNumber, int uid, String password){
         this.username=username;
         this.phoneNumber=phoneNumber;
@@ -26,6 +34,7 @@ public class Account{
         this.perferedDecade=404;
     }
     
+    //getters and setters
     public boolean setUsername(String username){
         this.username=username;
         return true;
@@ -61,6 +70,8 @@ public class Account{
     public int getDecade(){
         return this.perferedDecade;
     }
+
+    //join and leave group methods.
     public void joinGroup(Group newGroup){
         this.joinedGroup.add(newGroup);
     }
