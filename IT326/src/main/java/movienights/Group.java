@@ -37,6 +37,9 @@ public class Group {
         members.add(member);
         return true; // Member added successfully
     }
+    public boolean removeMember(Account member){
+        return members.removeIf(account -> account.getUID() == member.getUID());
+    }
 // Getters and setters
 public int getGroupID() {
     return groupID;

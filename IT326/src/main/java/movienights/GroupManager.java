@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class GroupManager {
     private final QuerySerializer dataBase = new MySQLQuerySerializer(); // Database handler
-    private Collection<Group> groups = new ArrayList<>();
+    private final Collection<Group> groups = new ArrayList<>();
     private Group currentGroup;
 
     public Group retrieveGroup(int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
@@ -31,12 +31,16 @@ public class GroupManager {
     
 
     // Add a member to the current group
-public boolean addMember(Account member) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+public boolean addMember(Account member, int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    for(Group group : groups){
+        if(group.getGroupID()==groupID){
+            this.currentGroup=group;
+        }
+    }
     if (currentGroup == null) {
         System.out.println("Group not selected.");
         return false;
     }
-
     // Check if the member is already in the group
     if (currentGroup.getMembers().contains(member)) {
         System.out.println("Member already exists in the group.");

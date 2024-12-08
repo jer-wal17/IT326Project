@@ -10,7 +10,7 @@ public class Account{
     private int uid;
     private String password;
     private int perferedDecade;
-    public List<Group> group = new ArrayList<>();
+    public List<Group> joinedGroup = new ArrayList<>();
     public Account(){
 
     }
@@ -60,5 +60,11 @@ public class Account{
     }
     public int getDecade(){
         return this.perferedDecade;
+    }
+    public void joinGroup(Group newGroup){
+        this.joinedGroup.add(newGroup);
+    }
+    public boolean removeGroup(int groupID){
+        return joinedGroup.removeIf(group-> group.getGroupID()==groupID);
     }
 }

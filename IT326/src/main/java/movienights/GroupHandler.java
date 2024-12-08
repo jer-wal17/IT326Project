@@ -7,7 +7,7 @@ import java.util.List;
 public class GroupHandler {
 
     private final GroupManager groupManager;  // Reference to GroupManager
-    private List<Group> availableGroups;  // List to store available groups
+    private final List<Group> availableGroups;  // List to store available groups
 
     // Constructor
     public GroupHandler() {
@@ -29,35 +29,43 @@ public class GroupHandler {
             }
         }
     }
-    public boolean validateFindGroupRequest(Account currentAccount) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Group validateFindGroupRequest(Account currentAccount, int groupID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         // Check if there are available groups to join
         if (availableGroups.isEmpty()) {
             System.out.println("No available groups to join.");
-            return false;
+            return null;
         }
     
         // Iterate through available groups
         for (Group group : availableGroups) {
             // Check if the group has space and the current account isn't already a member
-            if (group.getMembers().size() < group.getMaxSize() && !group.getMembers().contains(currentAccount)) {
+            if (group.getMembers().size() < group.getMaxSize() && !group.getMembers().contains(currentAccount) &&group.getGroupID()==groupID) {
                 // Use GroupManager to add the current account as a member of this group
                  // Assuming GroupManager takes a group as a parameter
-                if (groupManager.addMember(currentAccount)) {
+                if (groupManager.addMember(currentAccount, groupID)) {
                     System.out.println("Successfully joined the group: " + group.getGroupID());
-                    return true;
+                    return group;
                 } else {
                     System.out.println("Failed to join the group: " + group.getGroupID());
-                    return false;
+                    return null;
                 }
             }
         }
         // If no suitable group was found
         System.out.println("No suitable group found for joining.");
-        return false;
+        return null;
     }
     // Validate the request to leave a group
-    public boolean validateLeaveGroupRequest(Account currentAccount) {
-        return true;  // always valid to leave a group
+    public boolean validateLeaveGroupRequest(Account currentAccount, int groupID) {
+        if(currentAccount!=null){
+            for(Group group : availableGroups){
+                if(group.getGroupID()==groupID){
+                    group.removeMember(currentAccount);
+                    return groupManager.updateGroup(group);
+                }
+            }
+        }
+        return false;
     }
 
     // Validate the group creation request

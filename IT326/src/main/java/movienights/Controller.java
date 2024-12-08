@@ -133,10 +133,28 @@ public class Controller{
         return groupH.validateCreateGroupRequest(group);
     }
     public boolean joinGroup(int groupID){
-        return groupH.validateFindGroupRequest(this.currentAccount, groupID);
+        Group joinGroup = groupH.validateFindGroupRequest(this.currentAccount, groupID);
+        if(joinGroup!=null){
+            Account changeTo = this.currentAccount;
+            changeTo.joinGroup(joinGroup);
+            if (accountH.validateEditAccountRequest(changeTo)){
+                this.currentAccount=changeTo;
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
-    public boolean leaveGroup(){
-        return groupH.validateLeaveGroupRequest(this.currentAccount);
+    public boolean leaveGroup(int groupID){
+        if(groupH.validateLeaveGroupRequest(this.currentAccount, groupID)){
+            Account changeTo = this.currentAccount;
+            changeTo.removeGroup(groupID);
+            if(accountH.validateEditAccountRequest(changeTo)){
+                this.currentAccount=changeTo;
+                return true;
+            }
+        }
+        return false;
     }
     public boolean retrieveMovies(String title){
         OMDbAPI myAPI = (OMDbAPI) APIFactory.getAPI(APIFactory.APIType.OMDB);

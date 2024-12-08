@@ -160,7 +160,7 @@ public class Main {
                 System.out.print("Enter the Group ID to join: ");
                 int groupId = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
-                if (controller.joinGroup()) {
+                if (controller.joinGroup(groupId)) {
                     System.out.println("Joined the group successfully.");
                 } else {
                     System.out.println("Failed to join the group.");
@@ -174,7 +174,9 @@ public class Main {
                 break;
             }
             case 6: { // Leave Group
-                if (controller.groupH.validateLeaveGroupRequest()) {
+                System.out.println("Which group to leave: ");
+                int groupId = scanner.nextInt();
+                if (controller.leaveGroup(groupId)) {
                     System.out.println("Left the group successfully.");
                 } else {
                     System.out.println("Failed to leave the group. Ensure you're a member of a group.");
