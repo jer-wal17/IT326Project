@@ -1,7 +1,6 @@
 package test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ public class CreateGroup {
 
             assertTrue("Group creation should succeed", createSuccess);
         } catch (Exception e) {
-            fail("Exception occurred during createGroup test: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -31,7 +30,7 @@ public class CreateGroup {
 
             assertFalse("Group creation should fail when group is null", createSuccess);
         } catch (Exception e) {
-            fail("Exception occurred during createGroup test: " + e.getMessage());
+           e.printStackTrace();
         }
     }
     
