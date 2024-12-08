@@ -88,10 +88,10 @@ public class AccountManager{
         return false;
     }
     private void listGroups(){
-        if(this.curAccount.group.isEmpty()){
+        if(this.curAccount.joinedGroup.isEmpty()){
             System.out.println("Here are your current groups");
-            for(int i=0; i<this.curAccount.group.size(); i++){
-                System.out.println("Group ID: "+this.curAccount.group.get(i).getGroupID()+"\nMovie: "+this.curAccount.group.get(i).getMovie()+"\nMeeting Date: "+this.curAccount.group.get(i).getMeetingDate()+"\nMeeting Address: "+this.curAccount.group.get(i).getMeetingAddress()+"\n");
+            for(int i=0; i<this.curAccount.joinedGroup.size(); i++){
+                System.out.println("Group ID: "+this.curAccount.joinedGroup.get(i).getGroupID()+"\nMovie: "+this.curAccount.joinedGroup.get(i).getMovie()+"\nMeeting Date: "+this.curAccount.joinedGroup.get(i).getMeetingDate()+"\nMeeting Address: "+this.curAccount.joinedGroup.get(i).getMeetingAddress()+"\n");
             }
         }
         else{

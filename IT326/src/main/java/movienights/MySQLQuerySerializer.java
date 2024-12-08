@@ -113,7 +113,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
                 LocalDate localDate = LocalDate.of(dbDate.getYear(), dbDate.getMonth(),dbDate.getDay());
 
                 Group newGroup = new Group(groupID, movie, meetingAddress, localDate, returnAccount, 0);
-                returnAccount.group.add(newGroup);
+                returnAccount.joinedGroup.add(newGroup);
 
             }
 
