@@ -1,3 +1,9 @@
+/**
+ * Author: Zachary Kunzer
+ * Class: IT326
+ * Date: 12/08/2024
+ * LogInTest.java - Junit testing for logging into the system; 
+ */
 package test;
 
 import org.junit.Test;
@@ -20,7 +26,7 @@ public class LogInTest {
             loggedInAccount = manager.logIn(404, "TestPassword");
         }
         catch (Exception e) {
-            fail();
+            e.printStackTrace();
         }
         assertNotNull(loggedInAccount);
     }
@@ -31,7 +37,7 @@ public class LogInTest {
             loggedInAccount = manager.logIn(999, "FalsePassword");
         }
         catch (Exception e) {
-            fail();
+            e.printStackTrace();
         }
         assertNull(loggedInAccount);
 

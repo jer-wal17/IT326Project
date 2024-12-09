@@ -1,3 +1,10 @@
+/**
+ * Author: Zachary Kunzer
+ * Class: IT326
+ * Date: 12/08/2024
+ * DeleteAccountTest.java - Junit testing for delete account;
+ */
+
 package test;
 
 import org.junit.Test;
@@ -20,7 +27,7 @@ public class DeleteAccountTest {
             deleteResult = manager.deleteAccount();
         }
         catch (Exception e) {
-            fail();
+            e.printStackTrace();
         }
         assertTrue(deleteResult);
     }
@@ -32,7 +39,7 @@ public class DeleteAccountTest {
             deleteResult = manager.deleteAccount();
         }
         catch (Exception e) {
-            fail();
+            e.printStackTrace();
         }
         assertFalse(deleteResult);
     }

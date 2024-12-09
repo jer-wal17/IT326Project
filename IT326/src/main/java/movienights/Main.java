@@ -103,11 +103,16 @@ public class Main {
 
         switch (choice) {
             case 1: { // Log Out
-                if (controller.logOut()) {
-                    System.out.println("Logged out successfully.");
-                    loggedIn = false; // Exit logged-in menu
-                } else {
-                    System.out.println("No active session to log out from.");
+                try {
+                    if (controller.logOut()) {
+                        System.out.println("Logged out successfully.");
+                        loggedIn = false; // Exit logged-in menu
+                    } else {
+                        System.out.println("No active session to log out from.");
+                    }
+                }
+                catch (Exception e) {
+                    System.out.println("Error Logging Out");
                 }
                 break;
             }
@@ -210,34 +215,49 @@ private static void editInformation(Scanner scanner, Controller controller) {
 
     switch (choice) {
         case 1: { // Edit Account Information
-            System.out.println("Editing account information...");
-            if (controller.editAccount()) {
-                System.out.println("Account information updated successfully.");
-            } else {
-                System.out.println("Failed to update account information.");
+            try {
+                System.out.println("Editing account information...");
+                if (controller.editAccount()) {
+                    System.out.println("Account information updated successfully.");
+                } else {
+                    System.out.println("Failed to update account information.");
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Error updating account information");
             }
             break;
         }
         case 2: { // Edit Preferences
-            System.out.println("Editing preferences...");
-            if (controller.changePrefrences()) {
-                System.out.println("Preferences updated successfully.");
-            } else {
-                System.out.println("Failed to update preferences.");
+            try {
+                System.out.println("Editing preferences...");
+                if (controller.changePrefrences()) {
+                    System.out.println("Preferences updated successfully.");
+                } else {
+                    System.out.println("Failed to update preferences.");
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Failed to update preferences");
             }
             break;
         }
         case 3: { // Delete Account
-            System.out.print("Are you sure you want to delete your account? (yes/no): ");
-            String confirmation = scanner.nextLine();
-            if (confirmation.equalsIgnoreCase("yes")) {
-                if (controller.deleteAccount()) {
-                    System.out.println("Account deleted successfully.");
+            try {
+                System.out.print("Are you sure you want to delete your account? (yes/no): ");
+                String confirmation = scanner.nextLine();
+                if (confirmation.equalsIgnoreCase("yes")) {
+                    if (controller.deleteAccount()) {
+                        System.out.println("Account deleted successfully.");
+                    } else {
+                        System.out.println("Failed to delete account.");
+                    }
                 } else {
-                    System.out.println("Failed to delete account.");
+                    System.out.println("Account deletion canceled.");
                 }
-            } else {
-                System.out.println("Account deletion canceled.");
+            }
+            catch (Exception e) {
+                System.out.println("Failed deleting account");
             }
             break;
         }

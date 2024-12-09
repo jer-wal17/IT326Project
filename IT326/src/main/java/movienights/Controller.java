@@ -185,7 +185,12 @@ public class Controller{
  * @return true if the group is successfully created, false otherwise
  */
     public boolean createGroup(Group group){
-        return groupH.validateCreateGroupRequest(group);
+        try {
+            return groupH.validateCreateGroupRequest(group);
+        }
+        catch (Exception e) {
+        }
+        return false;
     }
 
 /**
@@ -195,15 +200,19 @@ public class Controller{
  * @return true if the group is successfully joined, false otherwise
  */
     public boolean joinGroup(int groupID){
-        Group joinGroup = groupH.validateFindGroupRequest(this.currentAccount, groupID);
-        if(joinGroup!=null){
-            Account changeTo = this.currentAccount;
-            changeTo.joinGroup(joinGroup);
-            if (accountH.validateEditAccountRequest(changeTo)){
-                this.currentAccount=changeTo;
-                return true;
-            }
+        try {
+            Group joinGroup = groupH.validateFindGroupRequest(this.currentAccount, groupID);
+            if(joinGroup!=null){
+                Account changeTo = this.currentAccount;
+                changeTo.joinGroup(joinGroup);
+                if (accountH.validateEditAccountRequest(changeTo)){
+                    this.currentAccount=changeTo;
+                    return true;
+                }
             return false;
+        }
+        } 
+        catch (Exception e) {
         }
         return false;
     }
@@ -215,13 +224,17 @@ public class Controller{
  * @return true if the group is successfully left, false otherwise
  */
     public boolean leaveGroup(int groupID){
-        if(groupH.validateLeaveGroupRequest(this.currentAccount, groupID)){
-            Account changeTo = this.currentAccount;
-            changeTo.removeGroup(groupID);
-            if(accountH.validateEditAccountRequest(changeTo)){
-                this.currentAccount=changeTo;
-                return true;
+        try {
+            if(groupH.validateLeaveGroupRequest(this.currentAccount, groupID)){
+                Account changeTo = this.currentAccount;
+                changeTo.removeGroup(groupID);
+                if(accountH.validateEditAccountRequest(changeTo)){
+                    this.currentAccount=changeTo;
+                    return true;
+                }
             }
+        }
+        catch (Exception e) {
         }
         return false;
     }

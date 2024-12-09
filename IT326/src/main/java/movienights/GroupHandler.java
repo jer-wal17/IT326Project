@@ -57,7 +57,8 @@ public class GroupHandler {
     }
     // Validate the request to leave a group
     public boolean validateLeaveGroupRequest(Account currentAccount, int groupID) {
-        if(currentAccount!=null){
+        try {
+            if(currentAccount!=null){
             for(Group group : availableGroups){
                 if(group.getGroupID()==groupID){
                     group.removeMember(currentAccount);
@@ -66,6 +67,10 @@ public class GroupHandler {
             }
         }
         return false;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     // Validate the group creation request
