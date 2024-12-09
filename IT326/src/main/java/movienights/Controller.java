@@ -40,6 +40,9 @@ public class Controller{
  */
     public boolean logIn(int uid, String password) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         this.currentAccount=accountH.validateLoginRequest(uid, password);
+        if(this.currentAccount!=null){
+            System.out.println("Welcome Back "+this.currentAccount.getUsername());
+        }
         return this.currentAccount!=null;
     }
 
@@ -60,14 +63,16 @@ public class Controller{
     public boolean editAccount() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.currentAccount!=null){
             Account changeAccount = this.currentAccount;
-            int selection;
+            int selection=0;
             String changeInfo;
-            System.out.println("--Edit Account Inforamtion--\n1) Change Username\n2) Change Password\n3) Change Phone Number\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
-            selection=keyboard.nextInt();
-            while(selection!=4||selection!=5){
+            String stringSelection;
+            System.out.print("--Edit Account Inforamtion--\n1) Change Username\n2) Change Password\n3) Change Phone Number\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
+            stringSelection=keyboard.nextLine();
+            selection=Integer.parseInt(stringSelection);
+            while(true){
                 switch(selection){
                     case 1: //Change Username
-                        System.out.println("New Username: ");
+                        System.out.print("New Username: ");
                         changeInfo = keyboard.nextLine();
                         changeAccount.setUsername(changeInfo);
                         break;
@@ -97,6 +102,9 @@ public class Controller{
                     default:
                         System.out.println("Provide an entry within 1-5");
                 }
+                System.out.print("--Edit Account Inforamtion--\n1) Change Username\n2) Change Password\n3) Change Phone Number\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
+                stringSelection=keyboard.nextLine();
+                selection=Integer.parseInt(stringSelection);
             }
         }
         return false;
@@ -109,16 +117,20 @@ public class Controller{
  */
     public boolean changePrefrences() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
         if(this.currentAccount!=null){
+            String stringFav;
             int favDecade;
             Account changeAccount = this.currentAccount;
             int selection;
-            System.out.println("--Edit Prefrences--\n1) Add Prefered Decade\n2) Change Perfered Decade\n3) Change Remove Perfered Decade\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
-            selection=keyboard.nextInt();
-            while(selection!=4||selection!=5){
+            String stringSelection;
+            System.out.print("--Edit Prefrences--\n1) Add Prefered Decade\n2) Change Perfered Decade\n3) Change Remove Perfered Decade\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
+            stringSelection=keyboard.nextLine();
+            selection=Integer.parseInt(stringSelection);
+            while(true){
                 switch(selection){
                     case 1: //Add Prefered Decade
-                        System.out.println("Add Favorite Decade");
-                        favDecade= keyboard.nextInt();
+                        System.out.print("Add Favorite Decade");
+                        stringFav = keyboard.nextLine();
+                        favDecade= Integer.parseInt(stringFav);
                         changeAccount.setPerferedDecade(favDecade);
                         break;
                     case 2: //Change Perfered Decade
@@ -127,7 +139,8 @@ public class Controller{
                         }
                         else{
                             System.out.print("New Favorite Decade: ");
-                            favDecade= keyboard.nextInt();
+                            stringFav = keyboard.nextLine();
+                            favDecade= Integer.parseInt(stringFav);
                             changeAccount.setPerferedDecade(favDecade);
                         }
                         break;
@@ -151,6 +164,9 @@ public class Controller{
                     default:
                         System.out.println("Provide an entry within 1-5");
                 }
+                System.out.print("--Edit Prefrences--\n1) Add Prefered Decade\n2) Change Perfered Decade\n3) Change Remove Perfered Decade\n4) Save Changes\n5) Cancel Changes\nSelection (1-5): ");
+                stringSelection=keyboard.nextLine();
+                selection=Integer.parseInt(stringSelection);
             }
         }
         return false;
@@ -165,13 +181,18 @@ public class Controller{
         String confirm;
         String doubleConfirm;
         if(this.currentAccount!=null){
-            System.out.println("Would you like to go back? (y:n): ");
+            System.out.print("Would you like to go back? (y:n): ");
             confirm=keyboard.nextLine();
             if(confirm.toLowerCase().equals("n")){
                 System.out.print("Delete Account? (y:n): ");
                 doubleConfirm=keyboard.nextLine();
                 if(confirm.toLowerCase().equals("n") && doubleConfirm.toLowerCase().equals("y")){
-                    return accountH.validateDeleteAccountRequest();
+                    boolean deletedAccount =accountH.validateDeleteAccountRequest();
+                    if(deletedAccount){
+                        this.currentAccount=null;
+                        return true;
+                    }
+                    return false;
                 }
             }
         }

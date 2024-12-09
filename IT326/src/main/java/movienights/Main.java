@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Main {
+    public static boolean loggedStatis;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Controller controller = new Controller();
         boolean flag = true;
+        
 
         System.out.println("Welcome to Movie Night");
 
@@ -18,20 +20,20 @@ public class Main {
             System.out.println("2. Create Account");// we assume that they do not have an account
             System.out.println("3. Exit"); 
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            String stringChoice = scanner.nextLine();
+            int choice = Integer.parseInt(stringChoice);
 
             switch (choice) {
                 case 1: { // Log In
                     System.out.print("Enter UID: ");
-                    int uid = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    String stringUID = scanner.nextLine();
+                    int uid = Integer.parseInt(stringUID);
                     System.out.print("Enter Password: ");
                     String password = scanner.nextLine();
                     try {
                         if (controller.logIn(uid, password)) {
                             System.out.println("Login successful!");
-
+                            loggedStatis=true;
                             // Show logged-in menu
                             loggedInMenu(scanner, controller);
 
@@ -57,8 +59,8 @@ public class Main {
                     String phoneNumber = scanner.nextLine();
                 
                     System.out.print("Enter a UID (Unique ID): ");
-                    int uid = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    String stringUID = scanner.nextLine();
+                    int uid = Integer.parseInt(stringUID);
                 
                     try {
                         // Call the createAccount method in the Controller class
@@ -85,10 +87,9 @@ public class Main {
     }
 // Private helper method loggedInMenu that will further display what the user will be interested on doing nce they log in
     private static void loggedInMenu(Scanner scanner, Controller controller) {
-    boolean loggedIn = true;
     Account currentAccount = new Account();
 
-    while (loggedIn) {
+    while (loggedStatis) {
         System.out.println("\nLogged In Menu:");
         System.out.println("1. Log Out");
         System.out.println("2. Edit Account");
@@ -98,15 +99,15 @@ public class Main {
         System.out.println("6. Leave Group");
         System.out.println("7. Retrieve Movie");
         System.out.print("Enter your choice: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        String stringChoice = scanner.nextLine();
+        int choice = Integer.parseInt(stringChoice);
 
         switch (choice) {
             case 1: { // Log Out
                 try {
                     if (controller.logOut()) {
                         System.out.println("Logged out successfully.");
-                        loggedIn = false; // Exit logged-in menu
+                        loggedStatis = false; // Exit logged-in menu
                     } else {
                         System.out.println("No active session to log out from.");
                     }
@@ -138,12 +139,12 @@ public class Main {
                     LocalDate meetingDate = LocalDate.parse(dateInput); // Parse input to LocalDate
             
                     System.out.print("Enter the maximum size of the group: ");
-                    int maxSize = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    String stringMaxSize=scanner.nextLine();
+                    int maxSize = Integer.parseInt(stringMaxSize);
             
                     System.out.print("Enter a unique Group ID: ");
-                    int groupID = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    String stringGroupID=scanner.nextLine();
+                    int groupID = Integer.parseInt(stringGroupID);
             
                     // Create a `Movie` and `Group` object
                     Movie movie = new Movie(movieName); // Assuming a simple constructor in the `Movie` class
@@ -163,8 +164,8 @@ public class Main {
             case 4: { // Join Group
                 controller.groupH.listAvailableGroups();  // Show available groups
                 System.out.print("Enter the Group ID to join: ");
-                int groupId = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                String stringGroupID = scanner.nextLine();
+                int groupId = Integer.parseInt(stringGroupID);
                 if (controller.joinGroup(groupId)) {
                     System.out.println("Joined the group successfully.");
                 } else {
@@ -180,23 +181,25 @@ public class Main {
             }
             case 6: { // Leave Group
                 System.out.println("Which group to leave: ");
-                int groupId = scanner.nextInt();
+                String stringGroupID = scanner.nextLine();
+                int groupId = Integer.parseInt(stringGroupID);
                 if (controller.leaveGroup(groupId)) {
                     System.out.println("Left the group successfully.");
                 } else {
                     System.out.println("Failed to leave the group. Ensure you're a member of a group.");
                 }
                 break;
-            }case 7: // Retrieve Movies
-            System.out.print("Enter the movie title to search: ");
-            String title = scanner.nextLine();
-            boolean success = controller.retrieveMovies(title);
-            if (success) {
-                System.out.println("Movies retrieved successfully!");
-            } else {
-                System.out.println("No movies found for the given title.");
             }
-            break;
+            case 7: // Retrieve Movies
+                System.out.print("Enter the movie title to search: ");
+                String title = scanner.nextLine();
+                boolean success = controller.retrieveMovies(title);
+                if (success) {
+                    System.out.println("Movies retrieved successfully!");
+                } else {
+                    System.out.println("No movies found for the given title.");
+                }
+                break;
             default:
                 System.out.println("Invalid choice. Please select a valid option.");
         }
@@ -210,13 +213,12 @@ private static void editInformation(Scanner scanner, Controller controller) {
     System.out.println("2. Edit Preferences");
     System.out.println("3. Delete Account");
     System.out.print("Enter your choice: ");
-    int choice = scanner.nextInt();
-    scanner.nextLine(); // Consume newline
+    String stringChoice2 = scanner.nextLine();
+    int choice2 = Integer.parseInt(stringChoice2);
 
-    switch (choice) {
+    switch (choice2) {
         case 1: { // Edit Account Information
             try {
-                System.out.println("Editing account information...");
                 if (controller.editAccount()) {
                     System.out.println("Account information updated successfully.");
                 } else {
@@ -230,7 +232,6 @@ private static void editInformation(Scanner scanner, Controller controller) {
         }
         case 2: { // Edit Preferences
             try {
-                System.out.println("Editing preferences...");
                 if (controller.changePrefrences()) {
                     System.out.println("Preferences updated successfully.");
                 } else {
@@ -244,17 +245,14 @@ private static void editInformation(Scanner scanner, Controller controller) {
         }
         case 3: { // Delete Account
             try {
-                System.out.print("Are you sure you want to delete your account? (yes/no): ");
-                String confirmation = scanner.nextLine();
-                if (confirmation.equalsIgnoreCase("yes")) {
-                    if (controller.deleteAccount()) {
-                        System.out.println("Account deleted successfully.");
-                    } else {
-                        System.out.println("Failed to delete account.");
+                System.out.println("\n--Delete Account--");
+                if (controller.deleteAccount()) {
+                    System.out.println("Account deleted successfully.");   
+                    loggedStatis = false;
+                } 
+                else {
+                    System.out.println("Failed to delete account.");
                     }
-                } else {
-                    System.out.println("Account deletion canceled.");
-                }
             }
             catch (Exception e) {
                 System.out.println("Failed deleting account");
@@ -265,7 +263,5 @@ private static void editInformation(Scanner scanner, Controller controller) {
             System.out.println("Invalid choice. Please select a valid option.");
     }
 }
-
-
-    }
+}
 

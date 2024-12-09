@@ -48,17 +48,16 @@ public class AccountManager{
         if(dataBase.hasAlreadyStored(uid)){
             this.loginAccount=dataBase.retrieve(new Account(uid));
             if(loginAccount.getPassword().equals(password)){
-                System.out.println("Successfully Logged In");
                 this.curAccount = this.loginAccount;
                 listGroups();
                 return this.curAccount;
             }
             else{
-                System.out.println("Password doesn't match");
+                System.out.println("\nPassword doesn't match");
             }
         }
         else{
-            System.out.println("Username or Password not found.");
+            System.out.println("\nUsername or Password not found.");
         }
         return null;
     }
@@ -127,6 +126,7 @@ public class AccountManager{
         if(this.curAccount!=null){
             if(dataBase.hasAlreadyStored(this.curAccount.getUID())){
                 dataBase.delete(this.curAccount);
+                this.curAccount=null;
                 return true;
             }
             else{
