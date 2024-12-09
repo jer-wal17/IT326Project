@@ -154,7 +154,7 @@ public class MySQLQuerySerializer extends QuerySerializer {
         pstmt.setInt(1, group.getGroupID());
         ResultSet rs = pstmt.executeQuery();
 
-        // use the result set object to create the Account object that is to be returned
+        // use the result set object to create the Group object that is to be returned
         while( rs.next() ) {
             int groupID = rs.getInt("GroupID");
             String movieTitle = rs.getString("MovieTitle");
@@ -491,18 +491,18 @@ public class MySQLQuerySerializer extends QuerySerializer {
         }
 
         // create the sql query and insert the group into the database
-        queryString = "INSERT INTO it326_group_project.Groups(MovieTitle, MeetingAddress, MeetingDate) VALUES(?,?,?)";
+        queryString = "INSERT INTO it326_group_project.Groups(GroupID, MovieTitle, MeetingAddress, MeetingDate) VALUES(?,?,?,?)";
         PreparedStatement pstmt = connection.prepareStatement(queryString,Statement.RETURN_GENERATED_KEYS);
-        //pstmt.setInt(1, group.getGroupID());
-        pstmt.setString(1, group.getMovie().getMovieName());
-        pstmt.setString(2, group.getMeetingAddress());
-        pstmt.setDate(3, Date.valueOf(group.getMeetingDate()));
+        pstmt.setInt(1, group.getGroupID());
+        pstmt.setString(2, group.getMovie().getMovieName());
+        pstmt.setString(3, group.getMeetingAddress());
+        pstmt.setDate(4, Date.valueOf(group.getMeetingDate()));
         pstmt.executeUpdate();
-        ResultSet rs = pstmt.getGeneratedKeys();
+        // ResultSet rs = pstmt.getGeneratedKeys();
         int row = 0;
-        if(rs.next()){
+        /* if(rs.next()){
             row = rs.getInt(1);
-        }
+        } */
 
         // disconnect from the database
         connSerializer.disconnect(connection);

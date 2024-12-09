@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class GroupManager {
-    private final QuerySerializer dataBase = new MySQLQuerySerializer(); // Database handler
+    private final MySQLQuerySerializer dataBase = new MySQLQuerySerializer(); // Database handler
     private final Collection<Group> groups = new ArrayList<>();
     private Group currentGroup;
 
@@ -20,7 +20,7 @@ public class GroupManager {
 
     // Create a new group
     public boolean createGroup(Group group) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-        if (!dataBase.hasAlreadyStored(group.getGroupID())) {
+        if (!dataBase.hasAlreadyStoredGroup(group.getGroupID())) {
             groups.add(group);
             dataBase.save(group);
             return true;
