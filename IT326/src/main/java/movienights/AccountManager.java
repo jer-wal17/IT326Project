@@ -142,7 +142,7 @@ public class AccountManager{
  * Prints group details to the console or notifies the user if no groups are joined.
  */
     private void listGroups(){
-        if(this.curAccount.joinedGroup.isEmpty()){
+        if(!this.curAccount.joinedGroup.isEmpty()){
             System.out.println("Here are your current groups");
             for(int i=0; i<this.curAccount.joinedGroup.size(); i++){
                 System.out.println("Group ID: "+this.curAccount.joinedGroup.get(i).getGroupID()+"\nMovie: "+this.curAccount.joinedGroup.get(i).getMovie()+"\nMeeting Date: "+this.curAccount.joinedGroup.get(i).getMeetingDate()+"\nMeeting Address: "+this.curAccount.joinedGroup.get(i).getMeetingAddress()+"\n");
